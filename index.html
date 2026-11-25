@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Đồ Án & Bài Tập — Tính Toán + Lý Thuyết + Vision</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --input: #0b1220;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --ok: #34d399;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 14px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    h1 {
+      font-size: 1.15rem;
+      margin: 0;
+      color: #fff;
+    }
+    .badge {
+      font-size: 0.72rem;
+      background: #0c4a6e;
+      color: #7dd3fc;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    #draft { min-height: 175px; }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    button, .file-label {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #082f49;
+      flex: 1;
+      min-width: 190px;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-ok {
+      background: #065f46;
+      color: #a7f3d0;
+      border: 1px solid #10b981;
+    }
+    .btn-ok:hover { background: #047857; }
+    .btn-warn {
+      background: #451a03;
+      color: #fde68a;
+      border: 1px solid #d97706;
+    }
+    .btn-warn:hover { background: #78350f; }
+    .btn-ghost, .file-label {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover, .file-label:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .small-btn {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+    .label-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .label-bar label { margin: 0; }
+    .status {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .status.warn { color: var(--warn); }
+    .status.error { color: var(--danger); }
+    .status.ok { color: var(--ok); }
+    .hidden { display: none !important; }
+    .mode-hint {
+      font-size: 0.83rem;
+      color: #7dd3fc;
+      background: #0b192c;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 10px;
+    }
+    .warn-box {
+      font-size: 0.84rem;
+      color: #fde68a;
+      background: #2e1d06;
+      border: 1px solid #b45309;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .preset-wrap {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .preset-chip {
+      font-size: 0.78rem;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .preset-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .preset-chip.active {
+      background: #0c4a6e;
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .preset-chip .v-tag {
+      color: #34d399;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+    .img-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--input);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
+    .img-preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .img-thumb {
+      position: relative;
+      width: 96px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+    .img-thumb img {
+      width: 100%;
+      height: 82px;
+      object-fit: cover;
+      display: block;
+    }
+    .img-thumb .img-meta {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 2px 4px;
+      background: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .img-thumb .del-img {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      color: #fca5a5;
+      border: 1px solid #ef4444;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+    details { margin-top: 10px; }
+    details summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.88rem;
+      user-select: none;
+    }
+    #output { overflow-x: auto; }
+    #output h1, #output h2, #output h3 {
+      color: #fff;
+      margin-top: 1.15em;
+      margin-bottom: 0.4em;
+    }
+    #output blockquote {
+      margin: 10px 0;
+      padding: 8px 12px;
+      border-left: 3px solid var(--accent);
+      background: var(--input);
+      border-radius: 0 8px 8px 0;
+    }
+    #output pre {
+      background: var(--input);
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+    }
+    #output code {
+      background: var(--input);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    #output pre code { background: transparent; padding: 0; }
+    #output table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 0.9rem;
+    }
+    #output th, #output td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    #output th { background: #0f172a; }
+    .history-item {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 6px;
+      cursor: pointer;
+      font-size: 0.86rem;
+      background: var(--input);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .history-item:hover { border-color: var(--accent); }
+    .tag {
+      font-size: 0.72rem;
+      color: #93c5fd;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Check Đồ Án & Bài Tập <span class="badge">Toán + Lý thuyết + Ảnh</span></h1>
+      <button class="btn-ghost small-btn" id="toggleSettingsBtn">Cài đặt API & Model</button>
+    </header>
+
+    <!-- Cài đặt API & Chọn nhanh Model -->
+    <div class="card" id="settingsCard">
+      <div class="row">
+        <div>
+          <label for="provider">Nhà cung cấp API</label>
+          <select id="provider">
+            <option value="groq">Groq (Miễn phí, cực nhanh)</option>
+            <option value="openrouter">OpenRouter (Nhiều model free mạnh)</option>
+            <option value="deepseek">DeepSeek API</option>
+            <option value="custom">Custom (OpenAI-compatible)</option>
+          </select>
+        </div>
+        <div>
+          <label for="model">Model đang dùng (có thể tự gõ mã mới)</label>
+          <input id="model" type="text" placeholder="Chọn ở dưới hoặc dán mã model..." />
+        </div>
+        <div>
+          <label for="apiKey">API Key (chỉ lưu trên thiết bị này)</label>
+          <input id="apiKey" type="password" placeholder="Dán API Key vào đây..." autocomplete="off" />
+        </div>
+      </div>
+
+      <div id="customUrlWrap" class="hidden" style="margin-top: 10px;">
+        <label for="customUrl">Endpoint URL</label>
+        <input id="customUrl" type="text" placeholder="https://.../v1/chat/completions" />
+      </div>
+
+      <div class="preset-wrap" id="presetWrap"></div>
+    </div>
+
+    <!-- Khu vực nhập nội dung -->
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="mode">Chế độ kiểm tra</label>
+          <select id="mode">
+            <option value="hybrid">1. Tổng hợp (Vừa soi Tính toán + Vừa soi Lý thuyết)</option>
+            <option value="math">2. Chuyên sâu Tính toán, Công thức & Đơn vị</option>
+            <option value="theory">3. Chuyên sâu Đồ án Lý thuyết & Độ bao quát</option>
+            <option value="anti_ai">4. Săn "văn mẫu AI", số liệu & tiêu chuẩn bịa</option>
+            <option value="defense">5. Giả lập Hội đồng (Hỏi xoáy cả số liệu lẫn lý thuyết)</option>
+          </select>
+        </div>
+        <div>
+          <label for="topic">Tên đề tài / Môn học (giúp soi đúng thuật ngữ ngành)</label>
+          <input id="topic" type="text" placeholder="VD: Đồ án kỹ thuật / Bài tập lớn môn..." />
+        </div>
+      </div>
+      <div id="modeHint" class="mode-hint"></div>
+
+      <div class="label-bar" style="margin-top: 12px;">
+        <label for="rubric">1. Đề bài gốc / Đề cương & Dữ kiện đầu vào</label>
+        <button class="btn-ghost small-btn" onclick="clearField('rubric')">Xóa</button>
+      </div>
+      <textarea id="rubric" placeholder="Dán đề bài, số liệu ban đầu, yêu cầu giảng viên... (hoặc chụp ảnh vở/sách ở khung ngay dưới)"></textarea>
+
+      <!-- Khung đính kèm ảnh chụp vở / sách / công thức -->
+      <div class="img-box">
+        <div class="label-bar" style="margin-bottom: 0;">
+          <span class="status">Ảnh đề bài, công thức, bảng tra hoặc bài viết tay (tối đa 4 ảnh, tự nén gọn)</span>
+          <div class="btn-row">
+            <label class="file-label small-btn" for="cameraInput">📷 Chụp ảnh</label>
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" />
+            <label class="file-label small-btn" for="imageInput">🖼️ Chọn ảnh</label>
+            <input type="file" id="imageInput" accept="image/*" multiple class="hidden" />
+            <button class="btn-ghost small-btn hidden" id="clearImagesBtn">Xóa ảnh</button>
+          </div>
+        </div>
+        <div class="img-preview-grid hidden" id="imagePreview"></div>
+      </div>
+
+      <!-- Cảnh báo nếu đính kèm ảnh mà đang chọn model chỉ đọc text -->
+      <div class="warn-box hidden" id="visionWarnBox">
+        <span id="visionWarnText">Model hiện tại không đọc được ảnh.</span>
+        <button class="btn-warn small-btn" id="switchVisionBtn">Đổi nhanh sang Model Vision</button>
+      </div>
+
+      <div class="label-bar" style="margin-top: 12px;">
+        <label for="draft">2. Bài giải / Chương đồ án cần kiểm tra</label>
+        <div class="btn-row">
+          <label class="file-label small-btn" for="fileInput">📄 Tải .docx / .txt</label>
+          <input type="file" id="fileInput" accept=".docx,.txt,.md" class="hidden" />
+          <button class="btn-ghost small-btn" onclick="clearField('draft')">Xóa</button>
+        </div>
+      </div>
+      <textarea id="draft" placeholder="Dán bài giải hoặc chương đồ án AI vừa viết vào đây... (nếu đã chụp ảnh cả đề lẫn bài viết tay thì có thể ghi chú ngắn ở đây)"></textarea>
+      <div id="charCount" class="status" style="margin-top: 4px;">0 từ · 0 ký tự</div>
+
+      <!-- Ô đối chiếu giáo trình -->
+      <details>
+        <summary>+ Thêm giáo trình / công thức / hệ số chuẩn của thầy để đối chiếu (tùy chọn)</summary>
+        <div style="margin-top: 8px;">
+          <textarea id="reference" placeholder="Dán công thức gốc, hệ số tra bảng, hoặc đoạn giáo trình chuẩn vào đây nếu muốn tool kiểm tra xem bài làm có khớp sách không..."></textarea>
+        </div>
+      </details>
+
+      <div class="btn-row" style="margin-top: 14px;">
+        <button class="btn-primary" id="checkBtn">Kiểm tra & Phản biện</button>
+        <button class="btn-ghost" id="clearAllBtn">Xóa nội dung</button>
+      </div>
+      <div id="statusMsg" class="status" style="margin-top: 8px;"></div>
+    </div>
+
+    <!-- Kết quả -->
+    <div class="card hidden" id="resultCard">
+      <div class="label-bar">
+        <label>Báo cáo kiểm tra chi tiết</label>
+        <div class="btn-row">
+          <button class="btn-ok small-btn" id="copyFixBtn">Copy lệnh sửa gửi lại AI</button>
+          <button class="btn-ghost small-btn" id="copyBtn">Copy báo cáo</button>
+          <button class="btn-ghost small-btn" id="downloadBtn">Tải .md</button>
+        </div>
+      </div>
+      <div id="output"></div>
+    </div>
+
+    <!-- Lịch sử -->
+    <div class="card">
+      <details>
+        <summary>Lịch sử kiểm tra gần đây (chỉ lưu văn bản trên máy)</summary>
+        <div id="historyList" class="status" style="margin-top: 6px;">Chưa có lịch sử.</div>
+      </details>
+    </div>
+  </div>
+
+  <script>
+    const PROVIDERS = {
+      groq: {
+        url: "https://api.groq.com/openai/v1/chat/completions",
+        defaultVision: "meta-llama/llama-4-maverick-17b-128e-instruct",
+        presets: [
+          { id: "meta-llama/llama-4-maverick-17b-128e-instruct", label: "Llama 4 Maverick", vision: true },
+          { id: "meta-llama/llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout", vision: true },
+          { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B", vision: false }
+        ]
+      },
+      openrouter: {
+        url: "https://openrouter.ai/api/v1/chat/completions",
+        defaultVision: "qwen/qwen2.5-vl-72b-instruct:free",
+        presets: [
+          { id: "deepseek/deepseek-r1:free", label: "DeepSeek R1 (Toán/Logic)", vision: false },
+          { id: "qwen/qwen3-235b-a22b:free", label: "Qwen3 235B (Lý thuyết VN)", vision: false },
+          { id: "qwen/qwen2.5-vl-72b-instruct:free", label: "Qwen 2.5 VL 72B", vision: true },
+          { id: "google/gemma-3-27b-it:free", label: "Gemma 3 27B", vision: true }
+        ]
+      },
+      deepseek: {
+        url: "https://api.deepseek.com/chat/completions",
+        defaultVision: "",
+        presets: [
+          { id: "deepseek-reasoner", label: "DeepSeek Reasoner (R1)", vision: false },
+          { id: "deepseek-chat", label: "DeepSeek Chat (V3)", vision: false }
+        ]
+      },
+      custom: { url: "", defaultVision: "", presets: [] }
+    };
+
+    const MODE_META = {
+      hybrid: {
+        tag: "Tổng hợp",
+        temp: 0.1,
+        hint: "Soi 2 tuyến song song: tự tính lại công thức, đơn vị, số liệu + chấm độ bao quát đề cương, thuật ngữ và lỗ hổng lý thuyết."
+      },
+      math: {
+        tag: "Tính toán",
+        temp: 0.1,
+        hint: "Tập trung tính lại từng bước độc lập, kiểm tra công thức, đổi đơn vị, điều kiện áp dụng và xuất kèm code Python để chạy đối chứng."
+      },
+      theory: {
+        tag: "Lý thuyết",
+        temp: 0.2,
+        hint: "Chấm độ bao quát theo đề cương, độ sâu phân tích chuyên môn, mạch logic giữa các mục và gợi ý bổ sung bảng/sơ đồ."
+      },
+      anti_ai: {
+        tag: "Săn lỗi AI",
+        temp: 0.2,
+        hint: "Tập trung bắt các thông số, tiêu chuẩn, trích dẫn có nguy cơ bịa đặt và chỉ ra các đoạn văn mẫu chung chung cần viết lại."
+      },
+      defense: {
+        tag: "Hội đồng",
+        temp: 0.2,
+        hint: "Giả lập giảng viên phản biện soi cả lý do chọn công thức/hệ số lẫn bản chất lý thuyết, kèm bộ câu hỏi vấn đáp và khung trả lời."
+      }
+    };
+
+    const MAX_IMAGES = 4;
+    const $ = (id) => document.getElementById(id);
+    let attachedImages = []; // [{ name, dataUrl, kb }]
+    let lastRawMarkdown = "";
+
+    function isKnownTextOnlyModel(modelId) {
+      const m = (modelId || "").toLowerCase();
+      if (!m) return false;
+      const textOnlyHints = [
+        "llama-3.3-70b", "llama-3.1", "deepseek-r1", "deepseek-reasoner",
+        "deepseek-chat", "deepseek-v3", "qwen3-235b", "qwq-32b"
+      ];
+      return textOnlyHints.some((k) => m.includes(k));
+    }
+
+    function renderPresets() {
+      const provider = $("provider").value;
+      const currentModel = $("model").value.trim();
+      const wrap = $("presetWrap");
+      const presets = PROVIDERS[provider]?.presets || [];
+
+      if (!presets.length) {
+        wrap.innerHTML = "";
+        return;
+      }
+
+      wrap.innerHTML = `<span class="status" style="margin-right:4px;">Chọn nhanh:</span>`;
+      presets.forEach((p) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "preset-chip" + (currentModel === p.id ? " active" : "");
+        btn.innerHTML = p.label + (p.vision ? `<span class="v-tag">[Ảnh]</span>` : "");
+        btn.onclick = () => {
+          $("model").value = p.id;
+          saveSettings();
+          renderPresets();
+          checkVisionCompatibility();
+        };
+        wrap.appendChild(btn);
+      });
+    }
+
+    function checkVisionCompatibility() {
+      const warnBox = $("visionWarnBox");
+      const provider = $("provider").value;
+      const model = $("model").value.trim();
+
+      if (attachedImages.length > 0 && isKnownTextOnlyModel(model)) {
+        const defaultVision = PROVIDERS[provider]?.defaultVision;
+        if (defaultVision) {
+          $("visionWarnText").textContent = `Bạn đang đính kèm ${attachedImages.length} ảnh nhưng model "${model}" chỉ đọc chữ.`;
+          $("switchVisionBtn").classList.remove("hidden");
+        } else {
+          $("visionWarnText").textContent = `Nhà cung cấp hiện tại (${provider}) không hỗ trợ đọc ảnh. Hãy chuyển sang Groq hoặc OpenRouter.`;
+          $("switchVisionBtn").classList.add("hidden");
+        }
+        warnBox.classList.remove("hidden");
+      } else {
+        warnBox.classList.add("hidden");
+      }
+    }
+
+    $("switchVisionBtn").addEventListener("click", () => {
+      const provider = $("provider").value;
+      const target = PROVIDERS[provider]?.defaultVision;
+      if (target) {
+        $("model").value = target;
+        saveSettings();
+        renderPresets();
+        checkVisionCompatibility();
+        setStatus(`Đã chuyển sang model đọc ảnh: ${target}`, "ok");
+      }
+    });
+
+    function loadSettings() {
+      const saved = JSON.parse(localStorage.getItem("hybrid_auditor_settings") || "{}");
+      $("provider").value = saved.provider || "groq";
+      $("apiKey").value = saved.apiKey || "";
+      const fallbackModel = PROVIDERS[$("provider").value]?.presets?.[0]?.id || "";
+      $("model").value = saved.model || fallbackModel;
+      $("mode").value = saved.mode || "hybrid";
+      $("customUrl").value = saved.customUrl || "";
+      toggleCustomUrl();
+      updateModeHint();
+      renderPresets();
+      if (saved.apiKey) $("settingsCard").classList.add("hidden");
+      renderHistory();
+    }
+
+    function saveSettings() {
+      localStorage.setItem("hybrid_auditor_settings", JSON.stringify({
+        provider: $("provider").value,
+        apiKey: $("apiKey").value.trim(),
+        model: $("model").value.trim(),
+        mode: $("mode").value,
+        customUrl: $("customUrl").value.trim()
+      }));
+    }
+
+    function toggleCustomUrl() {
+      $("customUrlWrap").classList.toggle("hidden", $("provider").value !== "custom");
+    }
+
+    function updateModeHint() {
+      const m = MODE_META[$("mode").value];
+      $("modeHint").textContent = m ? m.hint : "";
+    }
+
+    $("provider").addEventListener("change", () => {
+      const p = $("provider").value;
+      const firstPreset = PROVIDERS[p]?.presets?.[0]?.id;
+      if (firstPreset) $("model").value = firstPreset;
+      toggleCustomUrl();
+      saveSettings();
+      renderPresets();
+      checkVisionCompatibility();
+    });
+
+    $("mode").addEventListener("change", () => {
+      updateModeHint();
+      saveSettings();
+    });
+
+    $("model").addEventListener("input", () => {
+      saveSettings();
+      renderPresets();
+      checkVisionCompatibility();
+    });
+
+    ["apiKey", "customUrl"].forEach((id) => {
+      $(id).addEventListener("input", saveSettings);
+    });
+
+    $("toggleSettingsBtn").addEventListener("click", () => {
+      $("settingsCard").classList.toggle("hidden");
+    });
+
+    function updateCounter() {
+      const text = $("draft").value.trim();
+      const chars = text.length;
+      const words = text ? text.split(/\s+/).length : 0;
+      const el = $("charCount");
+      if (chars > 14000) {
+        el.textContent = `${words} từ · ${chars} ký tự — Khá dài, nếu API báo quá giới hạn hãy chia nhỏ theo từng mục/chương.`;
+        el.className = "status warn";
+      } else {
+        el.textContent = `${words} từ · ${chars} ký tự`;
+        el.className = "status";
+      }
+    }
+
+    $("draft").addEventListener("input", updateCounter);
+
+    // Nén ảnh ngay trên trình duyệt để vừa rõ công thức vừa nhẹ dưới giới hạn API
+    function compressImage(file, maxSide = 1600, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          let { width, height } = img;
+          if (width > maxSide || height > maxSide) {
+            const ratio = Math.min(maxSide / width, maxSide / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/jpeg", quality);
+          const kb = Math.round((dataUrl.length * 3) / 4 / 1024);
+          resolve({ name: file.name || `anh-${Date.now()}.jpg`, dataUrl, kb });
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Không đọc được file ảnh."));
+        };
+        img.src = url;
+      });
+    }
+
+    async function handleImageFiles(fileList) {
+      const files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"));
+      if (!files.length) return;
+
+      const slots = MAX_IMAGES - attachedImages.length;
+      if (slots <= 0) {
+        return setStatus(`Chỉ đính kèm tối đa ${MAX_IMAGES} ảnh mỗi lần check.`, "warn");
+      }
+
+      setStatus("Đang xử lý & nén ảnh...");
+      try {
+        for (const file of files.slice(0, slots)) {
+          const compressed = await compressImage(file);
+          attachedImages.push(compressed);
+        }
+        renderImagePreviews();
+        checkVisionCompatibility();
+        setStatus(`Đã đính kèm ${attachedImages.length} ảnh.`, "ok");
+      } catch (err) {
+        setStatus("Lỗi xử lý ảnh: " + err.message, "error");
+      }
+    }
+
+    function renderImagePreviews() {
+      const grid = $("imagePreview");
+      const clearBtn = $("clearImagesBtn");
+      if (!attachedImages.length) {
+        grid.classList.add("hidden");
+        clearBtn.classList.add("hidden");
+        grid.innerHTML = "";
+        return;
+      }
+      grid.classList.remove("hidden");
+      clearBtn.classList.remove("hidden");
+      grid.innerHTML = "";
+
+      attachedImages.forEach((img, idx) => {
+        const card = document.createElement("div");
+        card.className = "img-thumb";
+        card.innerHTML = `
+          <img src="${img.dataUrl}" alt="Ảnh ${idx + 1}" />
+          <div class="img-meta">Ảnh ${idx + 1} · ${img.kb}KB</div>
+          <button type="button" class="del-img" title="Xóa ảnh">×</button>
+        `;
+        card.querySelector(".del-img").onclick = () => {
+          attachedImages.splice(idx, 1);
+          renderImagePreviews();
+          checkVisionCompatibility();
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    $("cameraInput").addEventListener("change", (e) => {
+      handleImageFiles(e.target.files);
+      e.target.value = "";
+    });
+
+    $("imageInput").addEventListener("change", (e) => {
+      handleImageFiles(e.target.files);
+      e.target.value = "";
+    });
+
+    $("clearImagesBtn").addEventListener("click", () => {
+      attachedImages = [];
+      renderImagePreviews();
+      checkVisionCompatibility();
+    });
+
+    // Hỗ trợ dán ảnh chụp màn hình trực tiếp bằng Ctrl+V
+    document.addEventListener("paste", (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      const imgFiles = [];
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          const f = item.getAsFile();
+          if (f) imgFiles.push(f);
+        }
+      }
+      if (imgFiles.length) handleImageFiles(imgFiles);
+    });
+
+    $("fileInput").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setStatus(`Đang đọc file ${file.name}...`);
+      try {
+        if (file.name.toLowerCase().endsWith(".docx")) {
+          const arrayBuffer = await file.arrayBuffer();
+          const res = await mammoth.extractRawText({ arrayBuffer });
+          $("draft").value = res.value.trim();
+        } else {
+          $("draft").value = (await file.text()).trim();
+        }
+        updateCounter();
+        setStatus(`Đã nạp xong file "${file.name}".`, "ok");
+      } catch (err) {
+        setStatus("Không đọc được file: " + err.message, "error");
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    function clearField(id) {
+      $(id).value = "";
+      if (id === "draft") updateCounter();
+      $(id).focus();
+    }
+
+    $("clearAllBtn").addEventListener("click", () => {
+      $("rubric").value = "";
+      $("draft").value = "";
+      $("reference").value = "";
+      attachedImages = [];
+      renderImagePreviews();
+      checkVisionCompatibility();
+      updateCounter();
+      $("resultCard").classList.add("hidden");
+      setStatus("");
+    });
+
+    function setStatus(msg, type = "") {
+      const el = $("statusMsg");
+      el.textContent = msg;
+      el.className = "status " + type;
+    }
+
+    function buildPrompt(topic, rubric, draft, reference, mode, imgCount) {
+      const imgNote = imgCount > 0
+        ? `\n=== LƯU Ý VỀ ${imgCount} ẢNH ĐÍNH KÈM ===\nNgười dùng có gửi kèm ${imgCount} ảnh (chụp đề bài, công thức, bảng tra hoặc bài làm viết tay). Hãy ĐỌC KỸ toàn bộ chữ, ký hiệu, chỉ số, đơn vị và số liệu trong ảnh trước (nếu đoạn nào bị mờ/khó đọc thì phải báo rõ, tuyệt đối không tự đoán bừa), rồi lấy làm dữ kiện gốc để đối chiếu và chấm bài.\n`
+        : "";
+
+      const refSection = reference
+        ? `\n=== TÀI LIỆU / CÔNG THỨC GỐC ĐỂ ĐỐI CHIẾU (ƯU TIÊN CAO NHẤT) ===\n${reference}\n`
+        : "";
+
+      const instructions = {
+        hybrid: `Thực hiện kiểm tra song song CẢ TÍNH TOÁN LẪN LÝ THUYẾT theo đúng 6 mục sau (dùng LaTeX $...$ hoặc $$...$$ cho công thức):
+
+### 1. Chấm điểm nhanh (Thang 10)
+Lập bảng Markdown đánh giá 5 tiêu chí: Độ chính xác tính toán & công thức | Độ chuẩn đơn vị & hệ số | Độ bao quát đề bài/đề cương | Độ sâu lý thuyết & thuật ngữ | Độ tin cậy (không bịa số/tài liệu). (Nếu không có tính toán thì ghi N/A ở 2 cột đầu).
+
+### 2. Soi phần Tính toán, Công thức & Đơn vị
+- **Tự tính lại độc lập từng bước** cho mọi phép tính có trong bài; chỉ rõ sai ở công thức gốc, thay nhầm số, sai đổi đơn vị, làm tròn quá tay hay chọn hệ số thiếu căn cứ.
+- Kiểm tra tính hợp lý vật lý/kỹ thuật của kết quả cuối cùng.
+
+### 3. Soi phần Lý thuyết & Độ bao quát
+- Đối chiếu với Đề bài/Đề cương (và ảnh đính kèm nếu có) xem còn thiếu ý nào, mục nào viết hời hợt chưa phân tích cơ chế/nguyên lý/điều kiện áp dụng.
+- Bắt lỗi sai bản chất chuyên môn, dùng sai thuật ngữ hoặc viết sáo rỗng kiểu "văn mẫu AI".
+- Cảnh báo các thông số tra bảng, tiêu chuẩn hoặc trích dẫn có nguy cơ bị AI bịa cần tra lại giáo trình.
+
+### 4. Điểm cần sửa & bổ sung để đạt điểm tối đa
+Liệt kê rõ từng điểm phải sửa lại số liệu, thêm luận điểm, bảng so sánh hoặc sơ đồ minh họa.
+
+### 5. Top 3 câu hỏi giảng viên dễ vặn nhất (cả công thức lẫn lý thuyết)
+Kèm hướng trả lời ngắn gọn, trúng trọng tâm.
+
+### 6. Lệnh sửa bài (gửi ngược lại cho AI viết lại)
+Viết 1 đoạn prompt ngắn gọn, gộp đủ các lỗi tính toán cần tính lại và các ý lý thuyết cần đào sâu (bắt buộc đặt trong khối code \`\`\`text ở cuối cùng).`,
+
+        math: `Tập trung cực sâu vào KIỂM CHỨNG TOÁN HỌC & KỸ THUẬT theo đúng 5 mục (dùng LaTeX cho công thức):
+
+### 1. Kết luận tổng quan
+Ghi rõ **[CHUẨN HOÀN TOÀN]** / **[ĐÚNG HƯỚNG NHƯNG SAI SỐ HOẶC THIẾU BƯỚC]** / **[SAI]**, kèm điểm ước lượng /10.
+
+### 2. Tự tính lại & Soi lỗi từng bước
+- Kiểm tra công thức gốc, điều kiện áp dụng, thứ nguyên/đơn vị đo.
+- Tính lại từng phép toán trung gian và đối chiếu với bài giải. Chỉ rõ dòng nào bấm nhầm, đổi đơn vị sai hoặc làm tròn gây lệch kết quả.
+
+### 3. Đáp án & Trình bày chuẩn
+Viết lại đúng bước bị sai và chốt kết quả cuối cùng kèm đơn vị chuẩn.
+
+### 4. Code Python kiểm chứng nhanh (nếu bài có nhiều phép tính số)
+Viết đoạn code Python ngắn gọn (dùng \`math\` hoặc \`sympy\`) tính lại toàn bộ số liệu của bài để chạy trên Google Colab.
+
+### 5. Lệnh sửa bài (gửi ngược lại cho AI)
+Viết prompt chỉ rõ chỗ tính sai cần sửa (bắt buộc đặt trong khối code \`\`\`text ở cuối cùng).`,
+
+        theory: `Thực hiện phản biện chuyên sâu cho ĐỒ ÁN LÝ THUYẾT theo 5 mục:
+
+### 1. Bảng chấm điểm nhanh (Thang 10)
+Chấm 4 tiêu chí: Độ bao quát đề cương | Độ sâu học thuật | Tính logic & liên kết | Độ chuẩn thuật ngữ & văn phong đồ án.
+
+### 2. Lỗ hổng độ bao quát
+Chỉ rõ mục nào trong đề cương bị bỏ sót hoặc mới liệt kê bề mặt mà chưa giải thích bản chất, ưu/nhược điểm, phạm vi ứng dụng.
+
+### 3. Soi lỗi chuyên môn, bố cục & văn phong
+Chỉ ra nhận định sai bản chất, lặp ý giữa các mục, lập luận thiếu căn cứ hoặc đoạn nên chuyển thành bảng so sánh / sơ đồ khối.
+
+### 4. Đề xuất đào sâu học thuật
+Gợi ý cụ thể các luận điểm, ví dụ thực tế hoặc thông số đối chiếu cần thêm để bài vượt mức trung bình.
+
+### 5. Lệnh sửa bài (gửi ngược lại cho AI)
+Viết prompt ngắn gọn để yêu cầu AI bổ sung và nâng tầm phần lý thuyết này (bắt buộc đặt trong khối code \`\`\`text ở cuối cùng).`,
+
+        anti_ai: `Đóng vai giảng viên cực kỳ nhạy bén trong việc phát hiện bài làm AI viết sơ sài hoặc bịa dữ kiện. Xuất 4 mục:
+
+### 1. Cảnh báo số liệu, tiêu chuẩn & trích dẫn nghi ngờ bịa đặt
+Liệt kê mọi hằng số, hệ số tra bảng, tiêu chuẩn (TCVN, ISO, ASTM...), công thức kinh nghiệm hoặc tài liệu tham khảo có nguy cơ AI bịa/nhầm cần tra lại giáo trình.
+
+### 2. Các đoạn mang nặng "văn mẫu AI"
+Trích ngắn những câu sáo rỗng, chung chung, liệt kê dàn trải và chỉ cách viết lại cho sắc nét, đúng chất kỹ thuật/học thuật.
+
+### 3. Lỗi thuật ngữ chuyên ngành & dịch máy
+Chỉ rõ cụm từ nào bị dịch cứng từ tiếng Anh hoặc dùng sai thuật ngữ phổ biến trong ngành tại Việt Nam.
+
+### 4. Lệnh sửa bài (gửi ngược lại cho AI)
+Prompt yêu cầu viết lại sạch văn mẫu và trung thực về số liệu/nguồn (bắt buộc đặt trong khối code \`\`\`text ở cuối cùng).`,
+
+        defense: `Đóng vai Chủ tịch Hội đồng chấm đồ án rất sắc sảo. Đọc bản nháp (cả phần tính toán nếu có lẫn lý thuyết) và xuất 3 mục:
+
+### 1. Các điểm yếu chí mạng dễ bị hội đồng bắt bẻ nhất
+Chỉ ra 3–5 lỗ hổng lớn (tại sao chọn công thức/hệ số này, giả thiết tính toán có mâu thuẫn với phần lý thuyết không, kết luận có khớp số liệu không).
+
+### 2. Bộ 7 câu hỏi phản biện (từ cơ bản đến hóc búa)
+Bao gồm cả câu hỏi vặn về số liệu/công thức lẫn bản chất lý thuyết. Mỗi câu gồm: **Câu hỏi** → **Ý đồ kiểm tra** → **Khung trả lời ăn điểm**.
+
+### 3. Lệnh sửa bài để "bịt lỗ hổng" trước khi nộp
+Prompt yêu cầu AI bổ sung lập luận giải thích sẵn ngay trong bài làm (bắt buộc đặt trong khối code \`\`\`text ở cuối cùng).`
+      }[mode];
+
+      return `Bạn là giảng viên hướng dẫn và phản biện đại học nghiêm khắc, giỏi cả phân tích lý thuyết lẫn tính toán kỹ thuật.
+TUYỆT ĐỐI KHÔNG khen xã giao hay mặc định bài làm dưới đây là đúng. Hãy kiểm tra độc lập, thẳng thắn, cụ thể từng mục.
+Nếu có phần "TÀI LIỆU / CÔNG THỨC GỐC ĐỂ ĐỐI CHIẾU", phải lấy đó làm chuẩn mực cao nhất để phát hiện sai lệch.
+${imgNote}
+=== THÔNG TIN CHUNG ===
+- Đề tài / Môn học: ${topic || "(Không ghi rõ — tự suy luận từ nội dung bài và ảnh)"}
+- Đề bài gốc / Đề cương & Dữ kiện:
+${rubric || "(Xem trong ảnh đính kèm nếu có, hoặc tự đánh giá theo chuẩn đại học)"}
+${refSection}
+=== YÊU CẦU KIỂM TRA ===
+${instructions}
+
+=== BÀI LÀM / CHƯƠNG ĐỒ ÁN CẦN KIỂM TRA ===
+${draft || "(Người dùng gửi bài làm bằng ảnh đính kèm — hãy đọc trực tiếp bài làm từ ảnh và kiểm tra theo đúng các mục trên)"}`;
+    }
+
+    function renderMarkdownWithMath(mdText) {
+      const parts = mdText.split(/(```[\s\S]*?```)/g);
+      const mathBlocks = [];
+
+      const processed = parts.map((part, i) => {
+        if (i % 2 === 1) return part;
+        return part
+          .replace(/\$\$([\s\S]+?)\$\$/g, (m) => { mathBlocks.push(m); return `@@MATH_${mathBlocks.length - 1}@@`; })
+          .replace(/\\\[([\s\S]+?)\\\]/g, (m) => { mathBlocks.push(m); return `@@MATH_${mathBlocks.length - 1}@@`; })
+          .replace(/\\\(([\s\S]+?)\\\)/g, (m) => { mathBlocks.push(m); return `@@MATH_${mathBlocks.length - 1}@@`; })
+          .replace(/\$([^\n$]+?)\$/g, (m) => { mathBlocks.push(m); return `@@MATH_${mathBlocks.length - 1}@@`; });
+      }).join("");
+
+      let html = marked.parse(processed);
+      html = html.replace(/@@MATH_(\d+)@@/g, (_, idx) => mathBlocks[Number(idx)]);
+      $("output").innerHTML = html;
+
+      if (window.renderMathInElement) {
+        renderMathInElement($("output"), {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "\\(", right: "\\)", display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function extractFixPrompt(mdText) {
+      const codeBlocks = [...mdText.matchAll(/```[a-zA-Z]*\n([\s\S]*?)```/g)];
+      if (codeBlocks.length > 0) {
+        return codeBlocks[codeBlocks.length - 1][1].trim();
+      }
+      return `Dựa trên báo cáo kiểm tra dưới đây, hãy tính lại các chỗ sai số liệu/công thức và bổ sung đầy đủ các ý lý thuyết còn thiếu, bỏ văn mẫu:\n\n${mdText}`;
+    }
+
+    function saveHistory(entry) {
+      try {
+        const list = JSON.parse(localStorage.getItem("hybrid_auditor_history") || "[]");
+        list.unshift(entry);
+        localStorage.setItem("hybrid_auditor_history", JSON.stringify(list.slice(0, 8)));
+        renderHistory();
+      } catch (_) {}
+    }
+
+    function renderHistory() {
+      const list = JSON.parse(localStorage.getItem("hybrid_auditor_history") || "[]");
+      const wrap = $("historyList");
+      if (!list.length) {
+        wrap.innerHTML = "Chưa có lịch sử.";
+        return;
+      }
+      wrap.innerHTML = "";
+      list.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        const baseLabel = item.topic || item.rubric?.slice(0, 60) || item.draft?.slice(0, 60) || "Bài kiểm tra bằng ảnh";
+        const cleanLabel = baseLabel.replace(/\n/g, " ");
+        const imgTag = item.imgCount ? ` (+${item.imgCount} ảnh)` : "";
+        const modeTag = MODE_META[item.mode]?.tag || item.mode;
+
+        const left = document.createElement("span");
+        left.textContent = `[${item.time}] ${cleanLabel}${imgTag}`;
+        const right = document.createElement("span");
+        right.className = "tag";
+        right.textContent = modeTag;
+
+        div.appendChild(left);
+        div.appendChild(right);
+        div.onclick = () => {
+          $("mode").value = item.mode || "hybrid";
+          updateModeHint();
+          $("topic").value = item.topic || "";
+          $("rubric").value = item.rubric || "";
+          $("draft").value = item.draft || "";
+          $("reference").value = item.reference || "";
+          updateCounter();
+          lastRawMarkdown = item.rawContent || item.result;
+          renderMarkdownWithMath(item.result);
+          $("resultCard").classList.remove("hidden");
+          $("resultCard").scrollIntoView({ behavior: "smooth" });
+        };
+        wrap.appendChild(div);
+      });
+    }
+
+    $("checkBtn").addEventListener("click", async () => {
+      const provider = $("provider").value;
+      const apiKey = $("apiKey").value.trim();
+      const model = $("model").value.trim();
+      const mode = $("mode").value;
+      const topic = $("topic").value.trim();
+      const rubric = $("rubric").value.trim();
+      const draft = $("draft").value.trim();
+      const reference = $("reference").value.trim();
+      const endpoint = provider === "custom" ? $("customUrl").value.trim() : PROVIDERS[provider].url;
+
+      if (!apiKey) {
+        $("settingsCard").classList.remove("hidden");
+        return setStatus("Chưa có API Key. Dán key trong mục Cài đặt API trước.", "error");
+      }
+      if (!endpoint || !model) {
+        $("settingsCard").classList.remove("hidden");
+        return setStatus("Thiếu Endpoint URL hoặc tên Model.", "error");
+      }
+      if (!draft && attachedImages.length === 0) {
+        return setStatus("Cần dán bài làm / chương đồ án hoặc đính kèm ít nhất 1 ảnh.", "error");
+      }
+
+      saveSettings();
+      $("checkBtn").disabled = true;
+      $("checkBtn").textContent = "Đang kiểm tra...";
+      setStatus(
+        attachedImages.length > 0
+          ? `Đang gửi ${attachedImages.length} ảnh và nội dung sang ${model}...`
+          : `Đang gửi nội dung sang ${model} để soi số liệu và lý thuyết...`
+      );
+
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        };
+        if (provider === "openrouter") {
+          headers["HTTP-Referer"] = window.location.href;
+          headers["X-Title"] = "Check Do An Hybrid Vision";
+        }
+
+        const promptText = buildPrompt(topic, rubric, draft, reference, mode, attachedImages.length);
+        const userContent = attachedImages.length > 0
+          ? [
+              { type: "text", text: promptText },
+              ...attachedImages.map((img) => ({
+                type: "image_url",
+                image_url: { url: img.dataUrl }
+              }))
+            ]
+          : promptText;
+
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            model,
+            temperature: MODE_META[mode]?.temp ?? 0.15,
+            messages: [{ role: "user", content: userContent }]
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data?.error?.message || `HTTP ${res.status}`);
+        }
+
+        const msg = data.choices?.[0]?.message || {};
+        const content = msg.content || "";
+        const reasoning = msg.reasoning_content
+          ? `<details><summary>Quá trình suy luận & tính nháp của model</summary>\n\n${msg.reasoning_content}\n\n</details>\n\n`
+          : "";
+        const fullText = reasoning + content;
+
+        lastRawMarkdown = content;
+        renderMarkdownWithMath(fullText);
+        $("resultCard").classList.remove("hidden");
+        saveHistory({
+          time: new Date().toLocaleString("vi-VN"),
+          mode, topic, rubric, draft, reference,
+          imgCount: attachedImages.length,
+          result: fullText,
+          rawContent: content
+        });
+        setStatus("Kiểm tra xong. Bấm nút xanh để copy lệnh sửa gửi lại AI.", "ok");
+      } catch (err) {
+        setStatus("Lỗi gọi API: " + err.message, "error");
+      } finally {
+        $("checkBtn").disabled = false;
+        $("checkBtn").textContent = "Kiểm tra & Phản biện";
+      }
+    });
+
+    $("copyBtn").addEventListener("click", async () => {
+      if (!lastRawMarkdown) return;
+      await navigator.clipboard.writeText(lastRawMarkdown);
+      $("copyBtn").textContent = "Đã copy!";
+      setTimeout(() => ($("copyBtn").textContent = "Copy báo cáo"), 1500);
+    });
+
+    $("copyFixBtn").addEventListener("click", async () => {
+      if (!lastRawMarkdown) return;
+      const fixPrompt = extractFixPrompt(lastRawMarkdown);
+      await navigator.clipboard.writeText(fixPrompt);
+      $("copyFixBtn").textContent = "Đã copy lệnh sửa!";
+      setTimeout(() => ($("copyFixBtn").textContent = "Copy lệnh sửa gửi lại AI"), 1800);
+    });
+
+    $("downloadBtn").addEventListener("click", () => {
+      if (!lastRawMarkdown) return;
+      const blob = new Blob([lastRawMarkdown], { type: "text/markdown;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `bao-cao-check-${Date.now()}.md`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    loadSettings();
+  </script>
+</body>
+</html>
